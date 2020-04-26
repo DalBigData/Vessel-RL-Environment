@@ -1,0 +1,11 @@
+{
+"type": "FeatureCollection",
+"features": [
+{ "type": "Feature", "properties": { "City": "bandar Abbas", "Country": "Iran", "Latitude": 27.11, "Longitude": 56.16 }, "geometry": { "type": "Point", "coordinates": [ 56.16, 27.11 ] } },
+{ "type": "Feature", "properties": { "City": "Dubai", "Country": "Emirates", "Latitude": 25.15, "Longitude": 55.17 }, "geometry": { "type": "Point", "coordinates": [ 55.17, 25.15 ] } },
+{ "type": "Feature", "properties": { "City": "Kowait City", "Country": "Kowait", "Latitude": 29.22, "Longitude": 47.58 }, "geometry": { "type": "Point", "coordinates": [ 47.58, 29.22 ] } },
+{ "type": "Feature", "properties": { "City": "Fav", "Country": "Iraq", "Latitude": 29.58, "Longitude": 48.28 }, "geometry": { "type": "Point", "coordinates": [ 48.28, 29.58 ] } },
+{ "type": "Feature", "properties": { "City": "Ras", "Country": "Arabia", "Latitude": 27.45, "Longitude": 49.3 }, "geometry": { "type": "Point", "coordinates": [ 49.3, 27.45 ] } },
+{ "type": "Feature", "properties": { "City": "Masqat", "Country": "Oman", "Latitude": 23.58, "Longitude": 58.35 }, "geometry": { "type": "Point", "coordinates": [ 58.35, 23.58 ] } }
+]
+}

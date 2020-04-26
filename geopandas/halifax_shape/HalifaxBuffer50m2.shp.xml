@@ -1,0 +1,193 @@
+<metadata>
+	<idinfo>
+		<citation>
+			<citeinfo>
+				<origin>REQUIRED: The name of an organization or individual that developed the data set.</origin>
+				<pubdate>REQUIRED: The date when the data set is published or otherwise made available for release.</pubdate>
+				<title>Nova Scotia Land 1:10000</title>
+				<geoform Sync="TRUE">vector digital data</geoform>
+				<onlink>\\MAGIC4\ns1_10000\new\projected\NS_Water_pt10000b.shp</onlink>
+				<ftname Sync="TRUE">NS_counties_better</ftname></citeinfo>
+		</citation>
+		<descript>
+			<abstract>REQUIRED: A brief narrative summary of the data set.</abstract>
+			<purpose>To show Nova Scotia Boundaries at a 1:10000 scale</purpose>
+			<langdata Sync="TRUE">en</langdata></descript>
+		<timeperd>
+			<timeinfo>
+				<sngdate>
+					<caldate>REQUIRED: The year (and optionally month, or month and day) for which the data set corresponds to the ground.</caldate>
+				</sngdate>
+			</timeinfo>
+			<current>REQUIRED: The basis on which the time period of content information is determined.</current>
+		</timeperd>
+		<status>
+			<progress>REQUIRED: The state of the data set.</progress>
+			<update>REQUIRED: The frequency with which changes and additions are made to the data set after the initial data set is completed.</update>
+		</status>
+		<spdom>
+			<bounding>
+				<westbc Sync="TRUE">-66.580008</westbc>
+				<eastbc Sync="TRUE">-59.588165</eastbc>
+				<northbc Sync="TRUE">47.263385</northbc>
+				<southbc Sync="TRUE">43.370767</southbc>
+			</bounding>
+			<lboundng><leftbc Sync="TRUE">228896.399601</leftbc><rightbc Sync="TRUE">758344.600072</rightbc><bottombc Sync="TRUE">4807428.700138</bottombc><topbc Sync="TRUE">5234433.899892</topbc></lboundng><minalti Sync="TRUE">0.000000</minalti><maxalti Sync="TRUE">6.200000</maxalti></spdom>
+		<keywords>
+			<theme>
+				<themekt>REQUIRED: Reference to a formally registered thesaurus or a similar authoritative source of theme keywords.</themekt>
+				<themekey>coast</themekey><themekey>boundary</themekey></theme>
+			<place>
+				<placekey>Canada</placekey>
+				<placekey>Nova Scotia</placekey>
+			</place>
+		</keywords>
+		<accconst>REQUIRED: Restrictions and legal prerequisites for accessing the data set.</accconst>
+		<useconst>REQUIRED: Restrictions and legal prerequisites for using the data set after access is granted.</useconst>
+		<ptcontac>
+			<cntinfo>
+				<cntperp>
+					<cntper>James Boxall</cntper>
+					<cntorg>Dalhousie University</cntorg>
+				</cntperp>
+				<cntpos>Director of the GIS Centre</cntpos>
+				<cntvoice>1-902-494-6126</cntvoice>
+				<cntemail>james.boxall@dal.ca</cntemail>
+			</cntinfo>
+		</ptcontac>
+		<native Sync="TRUE">Microsoft Windows XP Version 5.1 (Build 2600) Service Pack 2; ESRI ArcCatalog 9.1.0.780</native>
+		<natvform Sync="TRUE">Shapefile</natvform></idinfo>
+	<dataqual>
+		<lineage>
+			<srcinfo>
+				<srcscale>10000</srcscale>
+				<typesrc>DVD</typesrc>
+				<srccitea>Nova Scotia Geomatics Centre</srccitea>
+			</srcinfo>
+			<procstep>
+				<procdesc>Copy data from DVD</procdesc>
+				<procdate>2006</procdate>
+				<proccont>
+					<cntinfo>
+						<cntperp>
+							<cntper>Jennifer Strang</cntper>
+							<cntorg>Dalhousie University</cntorg>
+						</cntperp>
+						<cntpos>GIS Analyst</cntpos>
+						<cntvoice>1-902-494-1386</cntvoice>
+						<cntemail>jennifer.strang@dal.ca</cntemail>
+					</cntinfo>
+				</proccont>
+			</procstep>
+			<procstep>
+				<procdesc>Project data to UTM zone 20 WGS84</procdesc>
+				<procdate>200605</procdate>
+				<proccont>
+					<cntinfo>
+						<cntperp>
+							<cntper>Jennifer Strang</cntper>
+							<cntorg>Dalhousie University</cntorg>
+						</cntperp>
+						<cntpos>GIS Analyst</cntpos>
+						<cntvoice>1-902-494-1386</cntvoice>
+						<cntemail>jennifer.strang@dal.ca</cntemail>
+					</cntinfo>
+				</proccont>
+			</procstep>
+			<procstep>
+				<procdesc>Add Metadata</procdesc>
+				<procdate>20060601</procdate>
+				<proccont>
+					<cntinfo>
+						<cntperp>
+							<cntper>Jennifer Strang</cntper>
+							<cntorg>Dalhousie University</cntorg>
+						</cntperp>
+						<cntpos>GIS Analyst</cntpos>
+						<cntvoice>1-902-494-1386</cntvoice>
+						<cntemail>jennifer.strang@dal.ca</cntemail>
+					</cntinfo>
+				</proccont>
+			</procstep>
+			<procstep><proccont><cntinfo><cntperp><cntper>Jennifer Strang</cntper><cntorg>Dalhousie University</cntorg></cntperp><cntpos>GIS Analyst</cntpos><cntvoice>1-902-494-1386</cntvoice><cntemail>jennifer.strang@dal.ca</cntemail></cntinfo></proccont><procdesc>Selected out the coastline data using feature attribute code</procdesc><procsv>ArcMap9.1</procsv><procdate>200605</procdate></procstep><procstep><proccont><cntinfo><cntperp><cntper>Jennifer Strang</cntper><cntorg>Dalhousie University</cntorg></cntperp><cntpos>GIS Analyst</cntpos><cntvoice>1-902-494-1386</cntvoice><cntemail>jennifer.strang@dal.ca</cntemail></cntinfo></proccont><procdesc>Features to Polygon using the selected coastline data and NS-NB boundary as recieved for the Geonova website</procdesc><procsv>ArcMap9.1</procsv><procdate>200605</procdate></procstep><procstep><procdesc Sync="TRUE">Dataset copied.</procdesc><srcused Sync="TRUE">E:\jen_strang\data\ns1_10000\new\projected\NS_Land10000</srcused><date Sync="TRUE">20060602</date><time Sync="TRUE">15114700</time></procstep><procstep><procdesc Sync="TRUE">Dataset copied.</procdesc><srcused Sync="TRUE"></srcused><date Sync="TRUE">20070516</date><time Sync="TRUE">14440600</time></procstep><procstep><procdesc Sync="TRUE">Dataset copied.</procdesc><srcused Sync="TRUE">H:\GIS_Centre\Projects\Ian\NS_Counties\Halifax</srcused><date Sync="TRUE">20070905</date><time Sync="TRUE">09454600</time></procstep><procstep><procdesc Sync="TRUE">Dataset copied.</procdesc><srcused Sync="TRUE">H:\GIS_Centre\Data\Nova_Scotia_Geodatabase\Halifax</srcused><date Sync="TRUE">20070906</date><time Sync="TRUE">14481100</time></procstep></lineage>
+	</dataqual>
+	<spdoinfo>
+		<direct Sync="TRUE">Vector</direct>
+		<ptvctinf><esriterm Name="HalifaxBuffer50m2"><efeatyp Sync="TRUE">Simple</efeatyp><efeageom code="4" Sync="TRUE"></efeageom><esritopo Sync="TRUE">FALSE</esritopo><efeacnt Sync="TRUE">0</efeacnt><spindex Sync="TRUE">FALSE</spindex><linrefer Sync="TRUE">FALSE</linrefer></esriterm></ptvctinf></spdoinfo>
+	<spref>
+		<horizsys>
+			<planar>
+				<planci>
+					<plance Sync="TRUE">coordinate pair</plance>
+					<coordrep>
+						<absres Sync="TRUE">0.000259</absres>
+						<ordres Sync="TRUE">0.000259</ordres>
+					</coordrep>
+					<plandu Sync="TRUE">meters</plandu>
+				</planci>
+			</planar>
+			<geodetic>
+				<horizdn Sync="TRUE">North American Datum of 1983</horizdn>
+				<ellips Sync="TRUE">Geodetic Reference System 80</ellips>
+				<semiaxis Sync="TRUE">6378137.000000</semiaxis>
+				<denflat Sync="TRUE">298.257222</denflat>
+			</geodetic>
+			<cordsysn><geogcsn Sync="TRUE">GCS_North_American_1983</geogcsn><projcsn Sync="TRUE">NAD_1983_UTM_Zone_20N</projcsn></cordsysn></horizsys>
+		<vertdef>
+			<altsys>
+				<altres Sync="TRUE">0.000001</altres>
+				<altenc Sync="TRUE">Explicit elevation coordinate included with horizontal coordinates</altenc>
+			</altsys>
+		</vertdef>
+	</spref>
+	<eainfo>
+		<detailed Name="HalifaxBuffer50m2">
+			<enttyp>
+				<enttypl Sync="TRUE">HalifaxBuffer50m2</enttypl>
+				<enttypt Sync="TRUE">Feature Class</enttypt><enttypc Sync="TRUE">0</enttypc></enttyp>
+			<attr><attrlabl Sync="TRUE">FID</attrlabl><attalias Sync="TRUE">FID</attalias><attrtype Sync="TRUE">OID</attrtype><attwidth Sync="TRUE">4</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale><attrdef Sync="TRUE">Internal feature number.</attrdef><attrdefs Sync="TRUE">Esri</attrdefs><attrdomv><udom Sync="TRUE">Sequential unique whole numbers that are automatically generated.</udom></attrdomv></attr><attr>
+				<attrlabl>Shape</attrlabl>
+				<attrdef>Feature geometry.</attrdef>
+				<attrdefs>ESRI</attrdefs>
+				<attrdomv>
+					<udom>Coordinates defining the features.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">Shape</attalias><attrtype Sync="TRUE">Geometry</attrtype><attwidth Sync="TRUE">0</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr><attrlabl Sync="TRUE">FID_NS_Lan</attrlabl><attalias Sync="TRUE">FID_NS_Lan</attalias><attrtype Sync="TRUE">Integer</attrtype><attwidth Sync="TRUE">10</attwidth><atprecis Sync="TRUE">10</atprecis><attscale Sync="TRUE">0</attscale></attr><attr><attrlabl Sync="TRUE">Id</attrlabl><attalias Sync="TRUE">Id</attalias><attrtype Sync="TRUE">Integer</attrtype><attwidth Sync="TRUE">10</attwidth><atprecis Sync="TRUE">10</atprecis><attscale Sync="TRUE">0</attscale></attr><attr><attrlabl Sync="TRUE">CountyName</attrlabl><attalias Sync="TRUE">CountyName</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">50</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr><attr><attrlabl Sync="TRUE">Shape_Leng</attrlabl><attalias Sync="TRUE">Shape_Leng</attalias><attrtype Sync="TRUE">Double</attrtype><attwidth Sync="TRUE">19</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr><attr><attrlabl Sync="TRUE">Shape_Area</attrlabl><attalias Sync="TRUE">Shape_Area</attalias><attrtype Sync="TRUE">Double</attrtype><attwidth Sync="TRUE">19</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale><attrdef Sync="TRUE">Area of feature in internal units squared.</attrdef><attrdefs Sync="TRUE">Esri</attrdefs><attrdomv><udom Sync="TRUE">Positive real numbers that are automatically generated.</udom></attrdomv></attr><attr><attrlabl Sync="TRUE">BUFF_DIST</attrlabl><attalias Sync="TRUE">BUFF_DIST</attalias><attrtype Sync="TRUE">Double</attrtype><attwidth Sync="TRUE">19</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr><attr><attrlabl Sync="TRUE">ORIG_FID</attrlabl><attalias Sync="TRUE">ORIG_FID</attalias><attrtype Sync="TRUE">Integer</attrtype><attwidth Sync="TRUE">10</attwidth><atprecis Sync="TRUE">10</atprecis><attscale Sync="TRUE">0</attscale></attr></detailed>
+	</eainfo>
+	<distinfo>
+		<resdesc>Downloadable Data</resdesc>
+		<stdorder>
+			<digform>
+				<digtinfo>
+					<transize>1.398</transize>
+					<dssize Sync="TRUE">0.000</dssize></digtinfo>
+			</digform>
+		</stdorder>
+	</distinfo>
+	<metainfo>
+		<metd Sync="TRUE">20070516</metd>
+		<metc>
+			<cntinfo>
+				<cntorgp>
+					<cntorg>REQUIRED: The organization responsible for the metadata information.</cntorg>
+					<cntper>REQUIRED: The person responsible for the metadata information.</cntper>
+				</cntorgp>
+				<cntaddr>
+					<addrtype>REQUIRED: The mailing and/or physical address for the organization or individual.</addrtype>
+					<city>REQUIRED: The city of the address.</city>
+					<state>REQUIRED: The state or province of the address.</state>
+					<postal>REQUIRED: The ZIP or other postal code of the address.</postal>
+				</cntaddr>
+				<cntvoice>REQUIRED: The telephone number by which individuals can speak to the organization or individual.</cntvoice>
+			</cntinfo>
+		</metc>
+		<metstdn Sync="TRUE">FGDC Content Standards for Digital Geospatial Metadata</metstdn>
+		<metstdv Sync="TRUE">FGDC-STD-001-1998</metstdv>
+		<mettc Sync="TRUE">local time</mettc>
+		<metextns>
+			<onlink>http://www.esri.com/metadata/esriprof80.html</onlink>
+			<metprof>ESRI Metadata Profile</metprof>
+		</metextns>
+		<langmeta Sync="TRUE">en</langmeta></metainfo>
+	<Esri><CreaDate>20070906</CreaDate><CreaTime>14481100</CreaTime><SyncOnce>FALSE</SyncOnce><SyncDate>20190821</SyncDate><SyncTime>14052600</SyncTime><ModDate>20190821</ModDate><ModTime>14052600</ModTime><DataProperties><lineage><Process Name="FeatureToPolygon_4" ToolSource="C:\Program Files\ArcGIS\ArcToolbox\Toolboxes\Data Management Tools.tbx\FeatureToPolygon" Date="20070516" Time="114536">FeatureToPolygon NS_UTM;NS_Land10000 C:\Ian_Work\temp\NS_counties_better.shp # ATTRIBUTES #</Process><Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Analysis Tools.tbx\Clip" Date="20190821" Time="140414">Clip Halifax Halifax C:\jen_strang\Projects\COMP_MEtemad_15082019\Halifax\Halifax.gdb\HalifaxLand2 #</Process><Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\CopyFeatures" Date="20190821" Time="140456">CopyFeatures HalifaxLand2 C:\jen_strang\Projects\COMP_MEtemad_15082019\Aug21\HalifaxLand2.shp # # # #</Process><Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Analysis Tools.tbx\Buffer" Date="20190821" Time="140528">Buffer HalifaxLand2 C:\jen_strang\Projects\COMP_MEtemad_15082019\Aug21\HalifaxBuffer50m2.shp "50 Meters" Full Round "No Dissolve" # "Geodesic (shape preserving)"</Process></lineage><itemProps><itemName Sync="TRUE">HalifaxBuffer50m2</itemName><imsContentType Sync="TRUE">002</imsContentType><itemLocation><linkage Sync="TRUE">file://\\JSTRANG-LAP\C$\jen_strang\Projects\COMP_MEtemad_15082019\Aug21\HalifaxBuffer50m2.shp</linkage><protocol Sync="TRUE">Local Area Network</protocol></itemLocation><itemSize Sync="TRUE">0.000</itemSize></itemProps><coordRef><type Sync="TRUE">Projected</type><geogcsn Sync="TRUE">GCS_North_American_1983</geogcsn><csUnits Sync="TRUE">Linear Unit: Meter (1.000000)</csUnits><projcsn Sync="TRUE">NAD_1983_UTM_Zone_20N</projcsn><peXml Sync="TRUE">&lt;ProjectedCoordinateSystem xsi:type='typens:ProjectedCoordinateSystem' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:typens='http://www.esri.com/schemas/ArcGIS/2.3.0'&gt;&lt;WKT&gt;PROJCS[&amp;quot;NAD_1983_UTM_Zone_20N&amp;quot;,GEOGCS[&amp;quot;GCS_North_American_1983&amp;quot;,DATUM[&amp;quot;D_North_American_1983&amp;quot;,SPHEROID[&amp;quot;GRS_1980&amp;quot;,6378137.0,298.257222101]],PRIMEM[&amp;quot;Greenwich&amp;quot;,0.0],UNIT[&amp;quot;Degree&amp;quot;,0.0174532925199433]],PROJECTION[&amp;quot;Transverse_Mercator&amp;quot;],PARAMETER[&amp;quot;False_Easting&amp;quot;,500000.0],PARAMETER[&amp;quot;False_Northing&amp;quot;,0.0],PARAMETER[&amp;quot;Central_Meridian&amp;quot;,-63.0],PARAMETER[&amp;quot;Scale_Factor&amp;quot;,0.9996],PARAMETER[&amp;quot;Latitude_Of_Origin&amp;quot;,0.0],UNIT[&amp;quot;Meter&amp;quot;,1.0],AUTHORITY[&amp;quot;EPSG&amp;quot;,26920]]&lt;/WKT&gt;&lt;XOrigin&gt;-5120900&lt;/XOrigin&gt;&lt;YOrigin&gt;-9998100&lt;/YOrigin&gt;&lt;XYScale&gt;450445547.3910538&lt;/XYScale&gt;&lt;ZOrigin&gt;-100000&lt;/ZOrigin&gt;&lt;ZScale&gt;10000&lt;/ZScale&gt;&lt;MOrigin&gt;-100000&lt;/MOrigin&gt;&lt;MScale&gt;10000&lt;/MScale&gt;&lt;XYTolerance&gt;0.001&lt;/XYTolerance&gt;&lt;ZTolerance&gt;0.001&lt;/ZTolerance&gt;&lt;MTolerance&gt;0.001&lt;/MTolerance&gt;&lt;HighPrecision&gt;true&lt;/HighPrecision&gt;&lt;WKID&gt;26920&lt;/WKID&gt;&lt;LatestWKID&gt;26920&lt;/LatestWKID&gt;&lt;/ProjectedCoordinateSystem&gt;</peXml></coordRef><LayerFile>{"type":"CIMLayerDocument","version":"2.3.0","build":15850,"layers":["CIMPATH=map/halifaxbuffer50m2.xml"],"layerDefinitions":[{"type":"CIMFeatureLayer","name":"HalifaxBuffer50m2","uRI":"CIMPATH=map/halifaxbuffer50m2.xml","sourceModifiedTime":{"type":"TimeInstant"},"useSourceMetadata":true,"description":"HalifaxBuffer50m2","layerElevation":{"type":"CIMLayerElevationSurface","mapElevationID":"{D8D1DE91-E0E4-4DE2-81F0-71ECC563E2B7}"},"expanded":true,"layerType":"Operational","showLegends":true,"visibility":true,"displayCacheType":"Permanent","maxDisplayCacheAge":5,"showPopups":true,"serviceLayerID":-1,"refreshRate":-1,"refreshRateUnit":"esriTimeUnitsSeconds","autoGenerateFeatureTemplates":true,"featureElevationExpression":"0","featureTable":{"type":"CIMFeatureTable","displayField":"CountyName","editable":true,"dataConnection":{"type":"CIMStandardDataConnection","workspaceConnectionString":"DATABASE=..\\..\\..\\..\\..\\..\\jen_strang\\Projects\\COMP_MEtemad_15082019\\Aug21","workspaceFactory":"Shapefile","dataset":"HalifaxBuffer50m2","datasetType":"esriDTFeatureClass"},"studyAreaSpatialRel":"esriSpatialRelUndefined","searchOrder":"esriSearchOrderSpatial"},"htmlPopupEnabled":true,"selectable":true,"featureCacheType":"Session","labelClasses":[{"type":"CIMLabelClass","expression":"$feature.OBJECTID","expressionEngine":"Arcade","featuresToLabel":"AllVisibleFeatures","maplexLabelPlacementProperties":{"type":"CIMMaplexLabelPlacementProperties","featureType":"Polygon","avoidPolygonHoles":true,"canOverrunFeature":true,"canPlaceLabelOutsidePolygon":true,"canRemoveOverlappingLabel":true,"canStackLabel":true,"connectionType":"Unambiguous","constrainOffset":"NoConstraint","contourAlignmentType":"Page","contourLadderType":"Straight","contourMaximumAngle":90,"enableConnection":true,"featureWeight":0,"fontHeightReductionLimit":4,"fontHeightReductionStep":0.5,"fontWidthReductionLimit":90,"fontWidthReductionStep":5,"graticuleAlignmentType":"Straight","keyNumberGroupName":"Default","labelBuffer":15,"labelLargestPolygon":false,"labelPriority":-1,"labelStackingProperties":{"type":"CIMMaplexLabelStackingProperties","stackAlignment":"ChooseBest","maximumNumberOfLines":3,"minimumNumberOfCharsPerLine":3,"maximumNumberOfCharsPerLine":24,"separators":[{"type":"CIMMaplexStackingSeparator","separator":" ","splitAfter":true},{"type":"CIMMaplexStackingSeparator","separator":",","visible":true,"splitAfter":true}]},"lineFeatureType":"General","linePlacementMethod":"OffsetCurvedFromLine","maximumLabelOverrun":80,"maximumLabelOverrunUnit":"Point","minimumFeatureSizeUnit":"Map","multiPartOption":"OneLabelPerPart","offsetAlongLineProperties":{"type":"CIMMaplexOffsetAlongLineProperties","placementMethod":"BestPositionAlongLine","labelAnchorPoint":"CenterOfLabel","distanceUnit":"Percentage","useLineDirection":true},"pointExternalZonePriorities":{"type":"CIMMaplexExternalZonePriorities","aboveLeft":4,"aboveCenter":2,"aboveRight":1,"centerRight":3,"belowRight":5,"belowCenter":7,"belowLeft":8,"centerLeft":6},"pointPlacementMethod":"AroundPoint","polygonAnchorPointType":"GeometricCenter","polygonBoundaryWeight":0,"polygonExternalZones":{"type":"CIMMaplexExternalZonePriorities","aboveLeft":4,"aboveCenter":2,"aboveRight":1,"centerRight":3,"belowRight":5,"belowCenter":7,"belowLeft":8,"centerLeft":6},"polygonFeatureType":"General","polygonInternalZones":{"type":"CIMMaplexInternalZonePriorities","center":1},"polygonPlacementMethod":"HorizontalInPolygon","primaryOffset":1,"primaryOffsetUnit":"Point","removeExtraWhiteSpace":true,"repetitionIntervalUnit":"Map","rotationProperties":{"type":"CIMMaplexRotationProperties","rotationType":"Arithmetic","alignmentType":"Straight"},"secondaryOffset":100,"strategyPriorities":{"type":"CIMMaplexStrategyPriorities","stacking":1,"overrun":2,"fontCompression":3,"fontReduction":4,"abbreviation":5},"thinningDistanceUnit":"Point","truncationMarkerCharacter":".","truncationMinimumLength":1,"truncationPreferredCharacters":"aeiou"},"name":"Class 1","priority":-1,"standardLabelPlacementProperties":{"type":"CIMStandardLabelPlacementProperties","featureType":"Line","featureWeight":"Low","labelWeight":"High","numLabelsOption":"OneLabelPerName","lineLabelPosition":{"type":"CIMStandardLineLabelPosition","above":true,"inLine":true,"parallel":true},"lineLabelPriorities":{"type":"CIMStandardLineLabelPriorities","aboveStart":3,"aboveAlong":3,"aboveEnd":3,"centerStart":3,"centerAlong":3,"centerEnd":3,"belowStart":3,"belowAlong":3,"belowEnd":3},"pointPlacementMethod":"AroundPoint","pointPlacementPriorities":{"type":"CIMStandardPointPlacementPriorities","aboveLeft":2,"aboveCenter":2,"aboveRight":1,"centerLeft":3,"centerRight":2,"belowLeft":3,"belowCenter":3,"belowRight":2},"rotationType":"Arithmetic","polygonPlacementMethod":"AlwaysHorizontal"},"textSymbol":{"type":"CIMSymbolReference","symbol":{"type":"CIMTextSymbol","blockProgression":"TTB","depth3D":1,"extrapolateBaselines":true,"fontEffects":"Normal","fontEncoding":"Unicode","fontFamilyName":"Tahoma","fontStyleName":"Regular","fontType":"Unspecified","haloSize":1,"height":10,"hinting":"Default","horizontalAlignment":"Left","kerning":true,"letterWidth":100,"ligatures":true,"lineGapType":"ExtraLeading","symbol":{"type":"CIMPolygonSymbol","symbolLayers":[{"type":"CIMSolidFill","enable":true,"color":{"type":"CIMRGBColor","values":[0,0,0,100]}}]},"textCase":"Normal","textDirection":"LTR","verticalAlignment":"Bottom","verticalGlyphOrientation":"Right","wordSpacing":100,"billboardMode3D":"FaceNearPlane"}},"useCodedValue":true,"visibility":true,"iD":-1}],"renderer":{"type":"CIMSimpleRenderer","patch":"Default","symbol":{"type":"CIMSymbolReference","symbol":{"type":"CIMPolygonSymbol","symbolLayers":[{"type":"CIMSolidStroke","enable":true,"colorLocked":true,"capStyle":"Butt","joinStyle":"Round","lineStyle3D":"Strip","miterLimit":10,"width":1,"color":{"type":"CIMRGBColor","values":[110,110,110,100]}},{"type":"CIMSolidFill","enable":true,"color":{"type":"CIMRGBColor","values":[0,100,255,36.8627433776855469]}}]}}},"scaleSymbols":true,"snappable":true}]}</LayerFile></DataProperties><MetaID>{5F5EF9C1-AC1E-421A-9A7E-9BAA1620FCB3}</MetaID></Esri><dataIdInfo><envirDesc Sync="TRUE">Microsoft Windows 10 Version 10.0 (Build 16299) ; Esri ArcGIS 12.3.2.15850</envirDesc><dataLang><languageCode Sync="TRUE" value="eng"></languageCode><countryCode value="USA" Sync="TRUE"></countryCode></dataLang><idCitation><resTitle Sync="TRUE">HalifaxBuffer50m2</resTitle><presForm><PresFormCd Sync="TRUE" value="005"></PresFormCd></presForm></idCitation><spatRpType><SpatRepTypCd Sync="TRUE" value="001"></SpatRepTypCd></spatRpType><dataExt><geoEle><GeoBndBox esriExtentType="native"><westBL Sync="TRUE">228896.399601</westBL><eastBL Sync="TRUE">758344.600072</eastBL><northBL Sync="TRUE">5234433.899892</northBL><southBL Sync="TRUE">4807428.700138</southBL><exTypeCode Sync="TRUE">1</exTypeCode></GeoBndBox></geoEle></dataExt><geoBox esriExtentType="decdegrees"><westBL Sync="TRUE">-66.580008</westBL><eastBL Sync="TRUE">-59.588165</eastBL><northBL Sync="TRUE">47.263385</northBL><southBL Sync="TRUE">43.370767</southBL><exTypeCode Sync="TRUE">1</exTypeCode></geoBox></dataIdInfo><mdLang><languageCode Sync="TRUE" value="eng"></languageCode><countryCode value="USA" Sync="TRUE"></countryCode></mdLang><mdStanName Sync="TRUE">ISO 19115 Geographic Information - Metadata</mdStanName><mdStanVer Sync="TRUE">DIS_ESRI1.0</mdStanVer><mdChar><CharSetCd Sync="TRUE" value="004"></CharSetCd></mdChar><mdHrLv><ScopeCd Sync="TRUE" value="005"></ScopeCd></mdHrLv><mdHrLvName Sync="TRUE">dataset</mdHrLvName><distInfo><distributor><distorTran><onLineSrc><orDesc Sync="TRUE">002</orDesc><linkage Sync="TRUE">file://\\MAGIC\GIS\GIS_Centre\Data\NS_Counties_Detailed_Shoreline\Halifax</linkage><protocol Sync="TRUE">Local Area Network</protocol></onLineSrc><transSize Sync="TRUE">0.000</transSize></distorTran><distorFormat><formatName Sync="TRUE">Shapefile</formatName></distorFormat></distributor><distFormat><formatName Sync="TRUE">Shapefile</formatName></distFormat><distTranOps><transSize Sync="TRUE">0.000</transSize></distTranOps></distInfo><refSysInfo><RefSystem><refSysID><identCode Sync="TRUE" code="26920">NAD_1983_UTM_Zone_20N</identCode><idCodeSpace Sync="TRUE">EPSG</idCodeSpace><idVersion Sync="TRUE">7.1.8(3.0.1)</idVersion></refSysID></RefSystem></refSysInfo><spatRepInfo><VectSpatRep><geometObjs Name="HalifaxBuffer50m2"><geoObjTyp><GeoObjTypCd value="002" Sync="TRUE"></GeoObjTypCd></geoObjTyp><geoObjCnt Sync="TRUE">0</geoObjCnt></geometObjs><topLvl><TopoLevCd value="001" Sync="TRUE"></TopoLevCd></topLvl></VectSpatRep></spatRepInfo><mdDateSt Sync="TRUE">20190821</mdDateSt></metadata>
