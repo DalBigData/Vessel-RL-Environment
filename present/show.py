@@ -16,9 +16,9 @@ class Mode(Enum):
     show = 2
 
 
-in_path = '/home/nader/workspace/dal/res1/'
+in_path = '/home/nader/workspace/dal/res5/'
 out_path = '/home/nader/workspace/dal/res_out/'
-file = '2020-41-14-20-41-38_9000_1_'
+file = '2020-04-30-17-49-15_0_1'
 mode = Mode.pic
 read_plan = True
 show_local_view = True
@@ -56,58 +56,57 @@ def read(file_path):
         agent_pos, last_target
     lines = open(file_path, 'r').readlines()
     for line in lines:
-        if line.find('size:') >= 0:
-            tmp = line[5:]
-            x_lim = eval(tmp)[0]
-            y_lim = eval(tmp)[1]
-        elif line.find('path:') >= 0:
-            map_path = line[5:-1]
-        elif line.find('static_object:') >= 0:
-            static_object = eval(line[14:])
-        elif line.find('dynamic_object:') >= 0:
-            dynamic_object.append(eval(line[15:]))
-        elif line.find('ais_object:') >= 0:
-            ais_object.append(eval(line[11:]))
-        elif 0 <= line.find('target:') <= 3:
-            target_r = eval(line[7:])[0]
-            target.append(eval(line[7:])[1])
-        elif line.find('last_target:') >= 0:
-            last_target = eval(line[12:])[1]
-        elif line.find('agent:') >= 0:
-            agent_pos.append(eval(line[6:])[1])
-            agent_r = eval(line[6:])[0]
-        elif line.find('crs:') >= 0:
-            crs = eval(line[4:])
+        if line.find('param') == 0:
+            param = eval(line[line.find(',') + 1:])
+            x_lim = param['size'][0]
+            y_lim = param['size'][1]
+            map_path = param['path']
+            crs = param['crs']
+            target_r = param['last_target'][0]
+            last_target = param['last_target'][1]
+        if line.find('step') == 0:
+            step_line = eval(line[line.find(',') + 1:])
+            step_number = step_line['step']
+            data = step_line['data']
+            dynamic_number = 0
+            ais_number = 0
+            for d in data:
+                print(d)
+                if d[0] == 'o':
+                    if d[1] == 0 and step_number == 0:
+                        static_object.append([d[2], [d[3], d[4]]])
+                    if d[1] == 1:
+                        if step_number == 0:
+                            dynamic_object.append([d[2], [[d[3], d[4]]]])
+                        else:
+                            dynamic_object[dynamic_number][1].append([d[3], d[4]])
+                        dynamic_number += 1
+                    if d[1] == 2:
+                        if step_number == 0:
+                            ais_object.append([d[2], [[d[3], d[4]]]])
+                        else:
+                            ais_object[ais_number][1].append([d[3], d[4]])
+                        ais_number += 1
+                elif d[0] == 'a':
+                    agent_pos.append([d[2], d[3]])
+                    agent_r = d[1]
+                elif d[0] == 't':
+                    target.append([d[1], d[2]])
 
 
-def read_local_view(episode_file):
-    step_number = 0
+def read_local_view(file_path):
     views = []
-    while True:
-        local_view_name = episode_file + 'localview' + str(step_number)
-        if not os.path.isfile(local_view_name):
-            break
-        first_line = open(local_view_name, 'r').readline()
-        view = eval(first_line)['view']
-        views.append(view)
-        step_number += 1
+    lines = open(file_path, 'r').readlines()
+    for line in lines:
+        if line.startswith('sent'):
+            view = eval(line[line.find(',') + 1:])['view']
+            views.append(view)
     return views
 
 
-if not read_plan:
-    read(path)
-    if show_local_view:
-        local_view.append(read_local_view(path))
-else:
-    episode_number = 1
-    while True:
-        name = path + str(episode_number) + '_0'
-        if not os.path.isfile(name):
-            break
-        read(name)
-        if show_local_view:
-            local_view.append(read_local_view(name))
-        episode_number += 1
+read(path)
+if show_local_view:
+    local_view = read_local_view(path)
 
 if show_local_view:
     fig, axs = plt.subplots(1, 2, figsize=(10, 5))
@@ -118,7 +117,8 @@ else:
     ax = axs
 
 print('../' + map_path)
-gpd_map = gpd.read_file('../' + map_path).to_crs(crs)
+gpd_map = gpd.read_file('../' + map_path)
+gpd_map = gpd_map.to_crs(crs)
 ln, = ax.plot([], [], 'ro')
 ax.set_xlim(x_lim[0], x_lim[1])
 ax.set_ylim(y_lim[0], y_lim[1])
@@ -209,9 +209,7 @@ def update(frame):
         previous_points_gdf = gpd.GeoDataFrame(index=[i for i in range(len(pre_agent_positions))],
                                                crs={'init': 'epsg:4326'}, geometry=previous_points)
         ax = previous_points_gdf.plot(ax=ax, color=[1, 99 / 255, 71 / 255])
-    print(agent_pos)
-    print(episode, step)
-    pos = agent_pos[episode][step]
+    pos = agent_pos[step]
     pre_agent_positions.append(pos)
     last_point = Point(pos[0], pos[1]).buffer(agent_r*3)
     last_point = gpd.GeoDataFrame(index=[0], crs=crs, geometry=[last_point])
@@ -222,8 +220,6 @@ def update(frame):
         ax1.cla()
         ax1.set_xlim([0, 50])
         ax1.set_ylim([0, 50])
-        print('hh', episode, step)
-        print('hh', len(local_view[episode]))
         local_view_all_x = [[i for _ in range(51)] for i in range(51)]
         local_view_all_y = [[j for j in range(51)] for _ in range(51)]
 
@@ -236,15 +232,15 @@ def update(frame):
         local_view_target_x = []
         local_view_target_y = []
 
-        for x in range(len(local_view[episode][step])):
-            for y in range(len(local_view[episode][step][0])):
-                if 0.49 < local_view[episode][step][x][y] < 0.51:
+        for x in range(len(local_view[step])):
+            for y in range(len(local_view[step][0])):
+                if 0.49 < local_view[step][x][y] < 0.51:
                     local_view_ground_x.append(x)
                     local_view_ground_y.append(y)
-                if local_view[episode][step][x][y] > 0.8:
+                if local_view[step][x][y] > 0.8:
                     local_view_target_x.append(x)
                     local_view_target_y.append(y)
-                if 0.29 < local_view[episode][step][x][y] < 0.31:
+                if 0.29 < local_view[step][x][y] < 0.31:
                     local_view_obs_x.append(x)
                     local_view_obs_y.append(y)
 
@@ -254,16 +250,11 @@ def update(frame):
         ax1.plot(local_view_obs_x, local_view_obs_y, 'o', color='orange', markersize=7)
         ax1.plot([25], [25], 'o', color=Color.agent.value, markersize=8)
     step += 1
-    if step >= len(agent_pos[episode]):
-        step = 0
-        episode += 1
     tt.append(time.time() - t1)
     return ln,
 
 
-number_of_step = 0
-for ep in agent_pos:
-    number_of_step += len(ep)
+number_of_step = len(agent_pos)
 
 
 def output_path():
@@ -281,8 +272,8 @@ if mode == Mode.gif:
     ani.save(out_path + file + '.gif', writer='imagemagick', fps=2, dpi=200)
 if mode == Mode.pic:
     output_path()
-    step = len(agent_pos[0]) - 1
-    update(0)
+    for i in range(number_of_step):
+        update(i)
     plt.show()
     fig.savefig(out_path + file)
 

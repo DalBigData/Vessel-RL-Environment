@@ -7,8 +7,8 @@ from server.setting import change_position_of_const_object
 
 
 class ObjectType(Enum):
-    StaticObject = 0,
-    DynamicObject = 1,
+    StaticObject = 0
+    DynamicObject = 1
     AISObject = 2
 
 
@@ -17,11 +17,17 @@ class Object:
         self._object_type = object_type
         self._r = r
         self._pos: Vector2D = None
+        self._plan_poses = []
+        self._epoch_pos = []
+        self._angle: AngleDeg = AngleDeg(0)
         self._episode_numbers = episode_numbers
         self._id = id_
 
     def pos(self) -> Vector2D:
         return self._pos
+
+    def angle(self) -> AngleDeg:
+        return self._angle
 
     def pos_list(self) -> list:
         return [self.pos().x(), self.pos().y()]
@@ -29,11 +35,12 @@ class Object:
     def r(self):
         return self._r
 
-    def object_type(self):
+    def object_type(self) -> ObjectType:
         return self._object_type
 
     def update(self, cycle=0):
-        pass
+        self._epoch_pos.append(self._pos)
+        self._plan_poses.append(Vector2D(self.pos().x(), self.pos().y()))
 
     def point(self) -> Point:
         return Point(self.pos().x(), self.pos().y()).buffer(self.r())
@@ -42,13 +49,22 @@ class Object:
         return Circle2D(self.pos(), self.r())
 
     def epoch_pos(self):
-        pass
+        return self._epoch_pos
+
+    def plan_poses(self):
+        return self._plan_poses
 
     def reset(self, obj):
-        pass
+        self._epoch_pos = []
+        self._plan_poses = []
 
     def id(self):
         return self._id
+
+    def log_string(self, s):
+        res = ['o', self.object_type().value, self.r(), self.plan_poses()[s].x(), self.plan_poses()[s].y(),
+               self.angle().degree()]
+        return res
 
 
 class StaticVessel(Object):
@@ -66,13 +82,14 @@ class StaticVessel(Object):
         return self._point
 
     def reset(self, obj):
+        super().reset(obj)
         if change_position_of_const_object:
             self._pos = Vector2D(self._start_pos.x(), self._start_pos.y())
             self._pos._x += (random.random() - 0.5) * 2.0 * 0.002
             self._pos._y += (random.random() - 0.5) * 2.0 * 0.002
             self._circle = Circle2D(self.pos(), self.r())
             self._point = Point(self.pos().x(), self.pos().y()).buffer(self.r())
-
+        self._plan_poses.append(Vector2D(self.pos().x(), self.pos().y()))
 
 class DynamicVessel(Object):
     def __init__(self, id_, object_type, start_pos, target_pos, r, episode_numbers):
@@ -92,15 +109,16 @@ class DynamicVessel(Object):
             self._pos = self._start_pos + move
         else:
             self._pos = self._target_pos - move
-        self._epoch_pos.append(self._pos)
+        super().update(episode)
 
     def epoch_pos(self):
         return self._epoch_pos
 
     def reset(self, obj):
+        super().reset(obj)
         self._pos = self._start_pos
-        self._epoch_pos = []
         self._epoch_pos.append(self._pos)
+        self._plan_poses.append(Vector2D(self.pos().x(), self.pos().y()))
 
 
 class AISVessel(Object):
@@ -111,15 +129,16 @@ class AISVessel(Object):
         self._epoch_pos = []
 
     def reset(self, obj):
+        super().reset(obj)
         self._cycle = random.randint(0, len(self._poses))
         self._pos = Vector2D(self._poses[self._cycle][0], self._poses[self._cycle][1])
-        self._epoch_pos = []
         self._epoch_pos.append(self._pos)
+        self._plan_poses.append(Vector2D(self.pos().x(), self.pos().y()))
 
     def update(self, cycle=0, max_cycle=1):
         new_cycle = min(self._cycle + cycle, len(self._poses) - 1)
         self._pos = Vector2D(self._poses[new_cycle][0], self._poses[new_cycle][1])
-        self._epoch_pos.append(self._pos)
+        super().update(cycle)
 
     def epoch_pos(self):
         return self._epoch_pos

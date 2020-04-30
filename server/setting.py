@@ -80,7 +80,7 @@ max_dist_agent_to_target = 2 * max_dist_agent_to_new_target  # Vanish Target Dis
 
 change_position_of_const_object = False
 
-save_local_view = False
+save_local_view = True
 show_test = False
 show_train = False
 
@@ -93,12 +93,21 @@ agent_radius = 0.00009
 agent_velocity = Vector2D(0.001, 0.001)
 target_position = None
 target_radius = 0.001
+agent_action_type = 'discrete'  # discrete or continues
+continues_action_type = 'ar'  # xy or ar or complex
+move_xy_max = [0.002, 0.002]  # used if discrete_action_type = 'xy'
+move_r_max = 0.002
 agent = Agent(id=0,
               start_pos=agent_start_position,
               r=agent_radius,
               target_pos=target_position,
               target_r=target_radius,
-              vel=agent_velocity)
+              vel=agent_velocity,
+              agent_action_type=agent_action_type,
+              continues_action_type=continues_action_type,
+              move_xy_max=move_xy_max,
+              move_r_max=move_r_max
+              )
 
 # client
 use_keyboard = False

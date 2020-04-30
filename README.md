@@ -1,31 +1,16 @@
 # Vessel Environment
 
-## How to run server?
-```bash
-cd vessel_server
-edit setting.py
-edit config_vessels.py
-python3 main.py
+## Prepared
 ```
-
-## How to run vessel agent that use table?
-```bash
-cd vessel_agents
-python3 simple.py
+git clone https://github.com/DalBigData/Vessel-RL-Environment.git
+cd Vessel-RL-Environment
+pip install -r requirement.txt
+python main.py
 ```
-The agent's model is table, it saves the table in setting.result_path.
-
-## How to run vessel agent that use deep q?
-```bash
-cd vessel_agents
-python3 deep_q_agent.py
-```
-The agent's model is NN, and model is trained by target network and buffer.
-this agent saves it's model weight in setting.result_path.
 
 ## How to show environment?
 ```bash
-cd vessel_show
+cd present
 python3 show.py path file [pic, gif, show]
 ```
 * pic: show picture and save it
@@ -34,4 +19,22 @@ python3 show.py path file [pic, gif, show]
 
 * show: show gif
 
+## How to change setting?
+```
+cd server
+youreditor setting.py
+```
 
+## Citing the Project
+To cite this repository in publications:
+
+```
+@article{etemad2020using,
+  title={Using Deep Reinforcement Learning Methods for Autonomous Vessels in 2D Environments},
+  author={Etemad, Mohammad and Zare, Nader and Sarvmaili, Mahtab and Soares, Amilcar and Machado, Bruno Brandoli and Matwin, Stan},
+  journal={arXiv preprint arXiv:2003.10249},
+  year={2020}
+}
+
+[Paper](https://arxiv.org/pdf/2003.10249)
+```

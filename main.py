@@ -3,7 +3,7 @@ from multiprocessing import Queue
 from multiprocessing import Pipe
 from server.server_ import main as server_main
 from client.client_dqn import main as agent_main
-from server.setting import use_keyboard
+from server.setting import use_keyboard, continues_action_type, agent_action_type
 import time
 
 
@@ -36,14 +36,29 @@ if use_keyboard:
                 in_action = False
 
             if len(actions_list) == 0:
-                actions = input('enter action or actions like \'2\' or \'1 2 2 3\':')
-                if len(actions) > 0:
-                    actions = actions.split(' ')
-                    for a in actions:
-                        try:
-                            actions_list.append(int(a) - 1)
-                        except:
-                            continue
+                if agent_action_type == 'continues':
+                    if continues_action_type == 'xy':
+                        actions = input(
+                            'enter action or actions like \'-0.001 0.002\' or \'0.001 0.001 0.001 -0.001\':')
+                    elif continues_action_type == 'ar':
+                        actions = input(
+                            'enter action or actions like \'92 0.002\' or \'-175 0.001 80 -0.001\':')
+                    if len(actions) > 0:
+                        actions = actions.split(' ')
+                        for a in range(len(actions))[::2]:
+                            try:
+                                actions_list.append([float(actions[a]), float(actions[a + 1])])
+                            except:
+                                continue
+                else:
+                    actions = input('enter action or actions like \'2\' or \'1 2 2 3\':')
+                    if len(actions) > 0:
+                        actions = actions.split(' ')
+                        for a in actions:
+                            try:
+                                actions_list.append(int(a) - 1)
+                            except:
+                                continue
             if len(actions_list) > 0:
                 input_main.send(actions_list[0])
                 del actions_list[0]

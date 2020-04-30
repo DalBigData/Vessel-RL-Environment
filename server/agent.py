@@ -29,8 +29,19 @@ class Agent:
                 self._vel = arg
             elif key.lower() == 'view_area_size':
                 self._view_area_size = arg
+            elif key.lower() == 'agent_action_type':
+                self._agent_action_type = arg
+            elif key.lower() == 'continues_action_type':
+                self._continues_action_type = arg
+            elif key.lower() == 'move_xy_max':
+                self._move_xy_max = arg
+            elif key.lower() == 'move_r_max':
+                self._move_r_max = arg
 
         self._epoch_pos = []
+        self._plan_poses = []
+        self._plan_targets = []
+        self._plan_local_views = []
         self._last_action = Vector2D(0, 0)
         self._prev_pos = None
         self._reward = 0
@@ -46,7 +57,9 @@ class Agent:
         self._last_dist_to_obstacle = 0
         self._first_episode = True
         self._episode_reward = 0
+        self._episode_rewards = []
         self._plan_reward = 0
+        self._plan_rewards = []
         self._train_episodes_reward = []
         self._test_episodes_reward = []
         self._train_plans_reward = []
@@ -73,12 +86,18 @@ class Agent:
                 self._pos = ag.pos()
             if ag.target_pos() is None:
                 while True:
-                    if use_plan:
-                        random_x = (2 * random.random() - 1.0) * max_dist_agent_to_new_target + self.pos().x()
-                        random_y = (2 * random.random() - 1.0) * max_dist_agent_to_new_target + self.pos().y()
+                    if not random_target_out_local_view:
+                        random_x = ((random.random() * 2) - 1) * (x_lim[1] - x_lim[
+                            0]) / geo_image_resolution_x * max_target_dist_in_local_view + self.pos().x()
+                        random_y = ((random.random() * 2) - 1) * (y_lim[1] - y_lim[
+                            0]) / geo_image_resolution_y * max_target_dist_in_local_view + self.pos().y()
                     else:
-                        random_x = (2 * random.random() - 1.0) * max_dist_agent_to_new_target + self.pos().x()
-                        random_y = (2 * random.random() - 1.0) * max_dist_agent_to_new_target + self.pos().y()
+                        if use_plan:
+                            random_x = (2 * random.random() - 1.0) * max_dist_agent_to_new_target + self.pos().x()
+                            random_y = (2 * random.random() - 1.0) * max_dist_agent_to_new_target + self.pos().y()
+                        else:
+                            random_x = (2 * random.random() - 1.0) * max_dist_agent_to_new_target + self.pos().x()
+                            random_y = (2 * random.random() - 1.0) * max_dist_agent_to_new_target + self.pos().y()
                     if use_geo_image:
                         if world.geo_image().in_sea(random_x, random_y):
                             self._target_pos = Vector2D(random_x, random_y)
@@ -90,6 +109,11 @@ class Agent:
                             break
             else:
                 pass
+            self._plan_targets = []
+            self._plan_targets.append(deepcopy(self.target_pos()))
+            self._plan_local_views = []
+            self._plan_poses = []
+            self._plan_poses.append(deepcopy(self.pos()))
         if use_plan:
             if episode_number_in_plan == 1:
                 if ag.target_pos() is None:
@@ -121,6 +145,10 @@ class Agent:
         if use_plan:
             if episode_number_in_plan == 1:
                 self._plan_reward = 0
+                self._episode_rewards = []
+                self._plan_rewards = []
+            else:
+                self._episode_rewards.append(self._episode_reward)
         self._episode_reward = 0
 
     def post_process(self, episode_number=1, call_from_episode=False):
@@ -131,6 +159,7 @@ class Agent:
                 self._train_episodes_reward.append(self._episode_reward)
 
         if use_plan and call_from_episode is False:
+            self._episode_rewards.append(self._episode_reward)
             if self._last_episode_test_mode:
                 self._test_plans_reward.append(self._plan_reward / episode_number)
             else:
@@ -141,12 +170,20 @@ class Agent:
         self._prev_pos = Vector2D(self.pos().x(), self.pos().y())
         self._pos += self._last_action
         self._epoch_pos.append(deepcopy(self.pos()))
+        self._plan_poses.append(deepcopy(self.pos()))
+        self._plan_targets.append(deepcopy(self.target_pos()))
 
     def episode_reward(self):
         return self._episode_reward
 
+    def episode_rewards(self):
+        return self._episode_rewards
+
     def plan_reward(self):
         return self._plan_reward
+
+    def plan_rewards(self):
+        return self._plan_rewards
 
     def train_episodes_reward(self):
         return self._train_episodes_reward
@@ -175,8 +212,32 @@ class Agent:
     def epoch_pos(self) -> list:
         return self._epoch_pos
 
+    def plan_poses(self) -> list:
+        return self._plan_poses
+
+    def plan_targets(self) -> list:
+        return self._plan_targets
+
+    def plan_local_views(self) -> list:
+        return self._plan_local_views
+
+    def add_local_view(self, local_view):
+        self._plan_local_views.append(local_view)
+
     def vel(self) -> Vector2D:
         return self._vel
+
+    def agent_action_type(self) -> str:
+        return self._agent_action_type
+
+    def continues_action_type(self) -> str:
+        return self._continues_action_type
+
+    def move_xy_max(self) -> list:
+        return self._move_xy_max
+
+    def move_r_max(self) -> float:
+        return self._move_r_max
 
     def point(self) -> Point:
         return Point(self.pos().x(), self.pos().y()).buffer(self.r())
@@ -311,6 +372,7 @@ class Agent:
         self.r1(world)
         self._episode_reward += self._reward
         self._plan_reward += self._reward
+        self._plan_rewards.append(self.reward())
 
     def reward(self):
         return self._reward
@@ -520,24 +582,37 @@ class Agent:
         return True
 
     def set_last_action(self, action):
-        if action == 4:
-            self._last_action = Vector2D(0, self.vel().y())
-        elif action == 7:
-            self._last_action = Vector2D(0, self.vel().y())
-        elif action == 1:
-            self._last_action = Vector2D(0, -self.vel().y())
-        elif action == 5:
-            self._last_action = Vector2D(self.vel().x(), 0)
-        elif action == 3:
-            self._last_action = Vector2D(-self.vel().x(), 0)
-        elif action == 8:
-            self._last_action = Vector2D(self.vel().x(), self.vel().y())
-        elif action == 2:
-            self._last_action = Vector2D(self.vel().x(), -self.vel().y())
-        elif action == 6:
-            self._last_action = Vector2D(-self.vel().x(), self.vel().y())
-        elif action == 0:
-            self._last_action = Vector2D(-self.vel().x(), -self.vel().y())
+        if self.agent_action_type() == "continues":
+            if self.continues_action_type() == "xy":
+                # action = [0.01, 0.01]
+                action[0] = min(abs(action[0]), self.move_xy_max()[0]) * (-1.0 if action[0] < 0 else 1.0)
+                action[1] = min(abs(action[1]), self.move_xy_max()[1]) * (-1.0 if action[1] < 0 else 1.0)
+                self._last_action = Vector2D(action[0], action[1])
+            elif self.continues_action_type() == "ar":
+                action[0] = float(action[0])
+                action[1] = min(abs(action[1]), self.move_r_max())
+                self._last_action = Vector2D.polar2vector(action[1], action[0])
+            else:
+                pass
+        else:
+            if action == 4:
+                self._last_action = Vector2D(0, self.vel().y())
+            elif action == 7:
+                self._last_action = Vector2D(0, self.vel().y())
+            elif action == 1:
+                self._last_action = Vector2D(0, -self.vel().y())
+            elif action == 5:
+                self._last_action = Vector2D(self.vel().x(), 0)
+            elif action == 3:
+                self._last_action = Vector2D(-self.vel().x(), 0)
+            elif action == 8:
+                self._last_action = Vector2D(self.vel().x(), self.vel().y())
+            elif action == 2:
+                self._last_action = Vector2D(self.vel().x(), -self.vel().y())
+            elif action == 6:
+                self._last_action = Vector2D(-self.vel().x(), self.vel().y())
+            elif action == 0:
+                self._last_action = Vector2D(-self.vel().x(), -self.vel().y())
 
     def __repr__(self):
         return 'id:' + str(self.id()) + 'pos:' + str(self.pos())

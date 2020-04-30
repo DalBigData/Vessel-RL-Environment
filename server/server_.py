@@ -23,7 +23,7 @@ from server.math.geom_2d import *
 from enum import Enum
 
 now = datetime.now()
-current_time = now.strftime("%Y-%M-%d-%H-%M-%S")
+current_time = now.strftime("%Y-%m-%d-%H-%M-%S")
 global_cycle = 0
 
 
@@ -41,7 +41,10 @@ class EpisodeResult(Enum):
         return self.value
 
 
-what_happen: List[EpisodeResult] = []
+test_what_happen_episode: List[EpisodeResult] = []
+test_what_happen_plan: List[EpisodeResult] = []
+test_what_happen_plan_len: List = []
+what_happen_episode: List[EpisodeResult] = []
 what_happen_plan: List[EpisodeResult] = []
 what_happen_plan_len: List = []
 
@@ -56,6 +59,7 @@ class Plan:
         self.agent = agent
         self.origin_path_to_target = Plan.planner.get_path(agent.pos(), agent.last_target_pos())
         self.path_len = len(self.origin_path_to_target)
+        self.next_targets = []
         if show:
             try:
                 Planner.ploter(Plan.planner, agent.pos(), self.origin_path_to_target, 'Douglas0.001')
@@ -98,6 +102,7 @@ class Plan:
         if best_candidate_in is not None:
             for i in range(best_candidate_in_i + 1):
                 del self.path_to_target[0]
+            self.next_targets.append(best_candidate_in)
             return best_candidate_in
         top_left_x = self.agent.pos().x()
         top_left_y = self.agent.pos().y()
@@ -122,6 +127,7 @@ class Plan:
                 best_target = t
             if target_number == 1:
                 break
+        self.next_targets.append(best_target)
         return best_target
 
 
@@ -286,13 +292,12 @@ class World:
 
 
 class EpisodeSimulation:
-    def __init__(self, server, test_mode, show, episode_number, plan_number=(0, 0)):
+    def __init__(self, server, test_mode, show, episode_number):
         self._server = server
         self.received_action = 0
         self._test_mode = test_mode
         self._show = show
-        self._file_name = str(plan_number[0]) + '_' + str(plan_number[1]) + '_' + str(episode_number[0]) + '_' + str(
-            episode_number[1])
+        self._file_name = str(episode_number[0]) + '_' + str(episode_number[1])
 
     def server(self):
         return self._server
@@ -301,49 +306,49 @@ class EpisodeSimulation:
         return self.server().world()
 
     def run(self):
-        global what_happen
+        global test_what_happen_episode, what_happen_episode
         happen = False
         agent: Agent = self.server().agent()
         if not setting.use_plan:
             self.world().reset_object()
+        step_counter = 0
         for i in range(setting.max_step_in_episode):
             self.world().send_to_clients(self._test_mode, i == setting.max_step_in_episode - 1)
 
             if setting.save_local_view:
-                send_world_file = open(setting.result_path
-                                       + setting.result_prefix
-                                       + current_time + '_'
-                                       + self._file_name
-                                       + 'localview' + str(i), 'w')
-                send_world_file.write(agent.send_world())
-                send_world_file.close()
+                agent.add_local_view(agent.send_world())
             self.world().show(show=self._show, name=self._file_name)
             if agent.land_collision():
+                what_happen_episode.append(EpisodeResult.LandCollision)
                 if self._test_mode:
-                    what_happen.append(EpisodeResult.LandCollision)
+                    test_what_happen_episode.append(EpisodeResult.LandCollision)
                 happen = True
                 break
             elif agent.obs_collision():
+                what_happen_episode.append(EpisodeResult.ObsCollision)
                 if self._test_mode:
-                    what_happen.append(EpisodeResult.ObsCollision)
+                    test_what_happen_episode.append(EpisodeResult.ObsCollision)
                 happen = True
                 break
             elif self.server().agent().arrive_target():
+                what_happen_episode.append(EpisodeResult.ArriveTarget)
                 if self._test_mode:
-                    what_happen.append(EpisodeResult.ArriveTarget)
+                    test_what_happen_episode.append(EpisodeResult.ArriveTarget)
                 happen = True
                 break
             elif self.server().agent().vanish_target():
+                what_happen_episode.append(EpisodeResult.VanishTarget)
                 if self._test_mode:
-                    what_happen.append(EpisodeResult.VanishTarget)
+                    test_what_happen_episode.append(EpisodeResult.VanishTarget)
                 happen = True
                 break
             elif i == setting.max_step_in_episode - 1:
                 break
             self.received_action = 0
+            step_counter += 1
             while True:
                 try:
-                    msg = self.server().action_queue.get(block=True, timeout=10.0)
+                    msg = self.server().action_queue.get(block=True, timeout=30.0)
                 except Exception:
                     print('server did not receive message')
                     continue
@@ -355,19 +360,21 @@ class EpisodeSimulation:
             self.world().update()
 
         self.server().agent().post_process(call_from_episode=True)
-        self.save()
+        self.save(step_counter + 1)
 
-        if not happen and self._test_mode:
-            what_happen.append(EpisodeResult.Other)
+        if not happen:
+            what_happen_episode.append(EpisodeResult.Other)
+            if self._test_mode:
+                test_what_happen_episode.append(EpisodeResult.Other)
         if self.server().agent().collision():
-            return False
+            return False, step_counter
         elif self.server().agent().arrive_last_target():
-            return False
+            return False, step_counter
         elif self.server().agent().arrive_target():
-            return True
+            return True, step_counter
         elif self.server().agent().vanish_target():
-            return False
-        return False
+            return False, step_counter
+        return False, step_counter
 
     def action_parse(self, msg):
         message: MessageClientAction = parse(msg)
@@ -377,36 +384,39 @@ class EpisodeSimulation:
         self.received_action += 1
         return True
 
-    def save(self):
-        file = open(
-            setting.result_path + setting.result_prefix + current_time + '_' + self._file_name,
-            'w')
-
-        file.write('size:' + str([setting.x_lim, setting.y_lim]) + '\n')
-        file.write('path:' + setting.map_path + '\n')
-        file.write('crs:' + str(setting.map_crs) + '\n')
-        static_objects = []
-        for i in range(self.world().get_object_number()):
-            o = self.world().get_object(i)
-            if o.object_type() == ObjectType.StaticObject:
-                static_objects.append([o.r(), o.pos_list()])
-        file.write('static_object:' + str(static_objects) + '\n')
-
-        for i in range(self.world().get_object_number()):
-            o = self.world().get_object(i)
-            if o.object_type() == ObjectType.DynamicObject:
-                file.write('dynamic_object:' + str([o.r(), o.epoch_pos()]) + '\n')
-
-        for i in range(self.world().get_object_number()):
-            o = self.world().get_object(i)
-            if o.object_type() == ObjectType.AISObject:
-                file.write('ais_object:' + str([o.r(), o.epoch_pos()]) + '\n')
-
+    def save(self, step_counter):
+        if setting.use_plan:
+            return
         ag: Agent = self.server().agent()
-        file.write('target:' + str([ag.target_r(), ag.target_pos()]) + '\n')
-        file.write('last_target:' + str([ag.target_r(), ag.last_target_pos()]) + '\n')
-        file.write('agent:' + str([ag.r(), ag.epoch_pos()]) + '\n')
-        # file.write('rewards:', str(ag.re))
+        file = open(setting.result_path + setting.result_prefix + current_time + '_' + self._file_name, 'w')
+        param = {'size': [setting.x_lim, setting.y_lim], 'path': setting.shape_path, 'crs': setting.map_crs,
+                 'last_target': [ag.target_r(), ag.last_target_pos()]}
+        result = {'happen': what_happen_episode[-1], 'happen_len': None,
+                  'ER': ag.episode_reward(),
+                  'PR': ag.episode_reward(),
+                  'APR': ag.episode_reward()}
+        plan_log = {}
+        res = ['param,' + str(param), 'results,' + str(result), 'plan,' + str(plan_log)]
+        for s in range(step_counter):
+            try:
+                r = ag.plan_rewards()[s]
+            except:
+                r = None
+            step = {'step': s, 'data': [], 'reward': r}
+            for i in range(self.server().world().get_object_number()):
+                o = self.server().world().get_object(i)
+                step['data'].append(o.log_string(s))
+            agent_str = ['a', ag.r(), ag.plan_poses()[s].x(), ag.plan_poses()[s].y(), 0]
+            target_str = ['t', ag.plan_targets()[s].x(), ag.plan_targets()[s].y()]
+            step['data'].append(agent_str)
+            step['data'].append(target_str)
+            res.append(f'step{s},' + str(step))
+
+        for s in range(step_counter):
+            res.append(f'sent{s},' + str(ag.plan_local_views()[s]))
+        res = '\n'.join(res)
+        file.write(res)
+        file.close()
 
 
 class PlanSimulation:
@@ -417,12 +427,14 @@ class PlanSimulation:
         self._show = show
         self.train_plan_number = train_plan_number
         self.test_plan_number = test_plan_number
+        self._file_name = str(train_plan_number) + '_' + str(test_plan_number)
 
     def server(self):
         return self._server
 
     def run(self):
-        global what_happen, what_happen_plan, what_happen_plan_len
+        global test_what_happen_episode, test_what_happen_plan, test_what_happen_plan_len, \
+            what_happen_episode, what_happen_plan, what_happen_plan_len
         world: World = self.server().world()
         world.reset_object()
         agent: Agent = self.server().agent()
@@ -436,43 +448,82 @@ class PlanSimulation:
                 continue
         i = 0
         last_agent_position = agent.pos()
+        step_counter = 0
         for i in range(1, setting.max_episode_in_plan + 1):
             next_target = plan.get_next_target()
             self._server.agent().set_target_pos(next_target)
 
             if not self._test_mode:
                 ep = EpisodeSimulation(self._server, test_mode=self._test_mode, show=self._show,
-                                       plan_number=(self.train_plan_number, 0),
                                        episode_number=(i, 0))
             else:
                 ep = EpisodeSimulation(self._server, test_mode=self._test_mode, show=self._show,
-                                       plan_number=(self.train_plan_number, self.test_plan_number),
                                        episode_number=(i, 0))
             last_agent_position = agent.pos()
             res = ep.run()
+            step_counter += res[1]
             print('Episode Number:', i, 'Episode R:', self.server().agent().episode_reward(),
                   "test" if self._test_mode else "")
-            if not res:
+            if not res[0]:
                 break
             world.reset_agent(i + 1, self._test_mode)
 
         agent.post_process(i)
+        plan_len = plan.path_len
+        if test_what_happen_episode[-1] == EpisodeResult.ArriveTarget:
+            plan_len = (plan_len, plan_len)
+        else:
+            new_plan = plan.get_plan_len(last_agent_position, agent.last_target_pos())
+            plan_len = (plan_len, max(0, plan_len - new_plan))
+
+        what_happen_plan.append(what_happen_episode[-1])
+        what_happen_plan_len.append(plan_len)
         if not self._test_mode:
             message = MessageEndPlan().build()
             self.server().sender_pipe.send(message)
         else:
-            what_happen_plan.append(what_happen[-1])
-            plan_len = plan.path_len
-            if what_happen[-1] == EpisodeResult.ArriveTarget:
-                what_happen_plan_len.append((plan_len, plan_len))
-            else:
-                new_plan = plan.get_plan_len(last_agent_position, agent.last_target_pos())
-                what_happen_plan_len.append((plan_len, plan_len - new_plan))
+            test_what_happen_plan.append(test_what_happen_episode[-1])
+            test_what_happen_plan_len.append(plan_len)
+
         if self._test_mode:
             print('Plan R:', self.server().agent().test_plans_reward()[-1])
         else:
             print('Plan R:', self.server().agent().train_plans_reward()[-1])
+        self.save(step_counter + 1, plan)
         return i
+
+    def save(self, step_counter, plan: Plan):
+        ag: Agent = self.server().agent()
+
+        file = open(setting.result_path + setting.result_prefix + current_time + '_' + self._file_name, 'w')
+        param = {'size': [setting.x_lim, setting.y_lim], 'path': setting.shape_path, 'crs': setting.map_crs,
+                 'last_target': [ag.target_r(), ag.last_target_pos()]}
+        result = {'happen': what_happen_plan[-1], 'happen_len': what_happen_plan_len[-1], 'ER': ag.episode_rewards(),
+                  'PR': ag.plan_reward(),
+                  'APR': ag.test_plans_reward()[-1] if self._test_mode else ag.train_plans_reward()[-1]}
+        plan_log = {'points': plan.origin_path_to_target, 'douglas': plan.const_path_to_target,
+                    'targets': plan.next_targets}
+        res = ['param,' + str(param), 'results,' + str(result), 'plan,' + str(plan_log)]
+        for s in range(step_counter):
+            try:
+                r = ag.plan_rewards()[s]
+            except:
+                r = None
+            step = {'step': s, 'data': [], 'reward': r}
+            for i in range(self.server().world().get_object_number()):
+                o = self.server().world().get_object(i)
+                step['data'].append(o.log_string(s))
+            agent_str = ['a', ag.r(), ag.plan_poses()[s].x(), ag.plan_poses()[s].y(), 0]
+            target_str = ['t', ag.plan_targets()[s].x(), ag.plan_targets()[s].y()]
+            step['data'].append(agent_str)
+            step['data'].append(target_str)
+            res.append(f'step{s},' + str(step))
+        if setting.save_local_view:
+            for s in range(step_counter):
+                res.append(f'sent{s},' + str(ag.plan_local_views()[s]))
+        res = '\n'.join(res)
+        file.write(res)
+        file.close()
 
 
 is_run = True
@@ -554,7 +605,7 @@ class Server:
     #     return self.object(id_)
 
     def run(self):
-        global is_run, listener_work, what_happen
+        global is_run, listener_work, test_what_happen_episode
         if setting.use_plan:
             time.sleep(2)
             for test_plan_number in range(1, setting.test_plan_nb + 1):
@@ -634,7 +685,7 @@ class Server:
         self.save_reward()
         is_run = False
         listener_work = False
-        print(what_happen)
+        print(test_what_happen_episode)
 
     def show_plot_reward(self):
         ag = self.agent()
@@ -668,7 +719,7 @@ class Server:
         plt.pause(1)
 
     def save_reward(self):
-        global what_happen, what_happen_plan, what_happen_plan_len
+        global test_what_happen_episode, test_what_happen_plan, test_what_happen_plan_len
         ag = self.agent()
         file = open(setting.result_path + current_time + '_' + 'train_episode_reward_ag' + str(ag.id()), 'w')
         for r in ag.train_episodes_reward():
@@ -688,20 +739,20 @@ class Server:
                 file.write(str(r) + '\n')
             file.close()
         file = open(setting.result_path + current_time + '_' + 'happen', 'a')
-        for h in what_happen:
+        for h in test_what_happen_episode:
             file.write(str(h) + '\n')
         file.close()
         file = open(setting.result_path + current_time + '_' + 'happen_plan', 'a')
-        for h in what_happen_plan:
+        for h in test_what_happen_plan:
             file.write(str(h) + '\n')
         file.close()
         file = open(setting.result_path + current_time + '_' + 'happen_plan_len', 'a')
-        for h in what_happen_plan_len:
+        for h in test_what_happen_plan_len:
             file.write(str(h[0]) + ' ' + str(h[1]) + '\n')
-        what_happen_plan_len = []
+        test_what_happen_plan_len = []
         file.close()
-        what_happen = []
-        what_happen_plan = []
+        test_what_happen_episode = []
+        test_what_happen_plan = []
 
 
 def main(info_pipe_server, action_pipe_server):
