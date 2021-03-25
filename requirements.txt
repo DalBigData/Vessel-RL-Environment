@@ -27,7 +27,7 @@ pyparsing==2.4.7
 pyproj==2.6.0
 python-dateutil==2.8.1
 pytz==2020.1
-PyYAML==5.3.1
+PyYAML==5.4
 scipy==1.4.1
 Shapely==1.6.4.post2
 six==1.14.0
